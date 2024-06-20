@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_tkagg as tkagg
 from matplotlib.figure import Figure
 import math
+import numpy as np
 
-def plot_points(points, frame):
+def plot_points(points, frame, title='Gráfica de puntos'):
     xs, ys = zip(*points)
 
     fig = Figure(figsize=(5, 4), dpi=100)
@@ -13,13 +14,13 @@ def plot_points(points, frame):
     plot.scatter(xs, ys)
     plot.set_xlabel('X')
     plot.set_ylabel('Y')
-    plot.set_title('Gráfica de puntos')
+    plot.set_title(title)
 
     canvas = tkagg.FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-def plot_calculated(xs, ys, A, B, frame):
+def plot_calculated(xs, ys, A, B, frame, is_exponential):
     fig = Figure(figsize=(5, 4), dpi=100)
     plot = fig.add_subplot(111)
 
@@ -28,6 +29,8 @@ def plot_calculated(xs, ys, A, B, frame):
 
     # Plot regression line
     regression_ys = [A + B * x for x in xs]
+    if is_exponential:
+        regression_ys = [math.exp(y) for y in regression_ys]
     plot.plot(xs, regression_ys, color='red', label='Regression Line')
 
     plot.set_xlabel('X')
@@ -82,7 +85,7 @@ def calculate_delta(xs, n):
     return delta
 
 def calculate_EA(sum_x2, sigma_squared, delta):
-    EA = math.sqrt((sum_x2 - sigma_squared) / delta)
+    EA = math.sqrt((sum_x2 * sigma_squared) / delta)
     return EA
 
 def calculate_EA_percent(EA, A):
@@ -120,13 +123,19 @@ def calculate_and_display_results():
             y = float(entries_y[i].get())
             points.append((x, y))
 
+        equation_type = var_equation_type.get()
+        is_exponential = (equation_type == "Exponencial")
+
+        if is_exponential:
+            points = [(math.log(x), math.log(y)) for x, y in points]
+
         # Limpiar las gráficas antes de dibujar nuevas
         for widget in frame_plot.winfo_children():
             widget.destroy()
         for widget in frame_calculated_plot.winfo_children():
             widget.destroy()
 
-        plot_points(points, frame_plot)
+        plot_points(points, frame_plot, title='Datos Transformados' if is_exponential else 'Gráfica de puntos')
 
         xs, ys = zip(*points)
         A = calculate_A(xs, ys, n)
@@ -156,7 +165,7 @@ def calculate_and_display_results():
         label_delta.config(text=f"El valor de Δ es: {delta:.4f}")
         label_S.config(text=f"El valor de S es: {S:.4f}")
 
-        plot_calculated(xs, ys, A, B, frame_calculated_plot)
+        plot_calculated(xs, ys, A, B, frame_calculated_plot, is_exponential)
 
     except ValueError as e:
         messagebox.showerror("Error", f"Error en la entrada de datos: {e}")
@@ -167,16 +176,16 @@ def create_entries():
     entries_y = []
     for i in range(int(entry_n.get())):
         entry_x = tk.Entry(window)
-        entry_x.grid(row=i+3, column=0)
+        entry_x.grid(row=i+4, column=0)
         entries_x.append(entry_x)
 
         entry_y = tk.Entry(window)
-        entry_y.grid(row=i+3, column=1)
+        entry_y.grid(row=i+4, column=1)
         entries_y.append(entry_y)
 
 # Configuración de la ventana principal
 window = tk.Tk()
-window.title("Cálculo de Regresión Lineal")
+window.title("Cálculo de Regresión Lineal o Exponencial")
 
 # Crear widgets
 label_n = tk.Label(window, text="Introduce el número de pares de datos:")
@@ -185,37 +194,47 @@ label_n.grid(row=0, column=0, columnspan=2)
 entry_n = tk.Entry(window)
 entry_n.grid(row=1, column=0, columnspan=2)
 
+label_equation_type = tk.Label(window, text="Selecciona el tipo de ecuación:")
+label_equation_type.grid(row=2, column=0, columnspan=2)
+
+var_equation_type = tk.StringVar(value="Lineal")
+radio_linear = tk.Radiobutton(window, text="Lineal", variable=var_equation_type, value="Lineal")
+radio_linear.grid(row=3, column=0)
+radio_exponential = tk.Radiobutton(window, text="Exponencial", variable=var_equation_type, value="Exponencial")
+radio_exponential.grid(row=3, column=1)
+
 button_create_entries = tk.Button(window, text="Crear entradas", command=create_entries)
-button_create_entries.grid(row=2, column=0, columnspan=2)
+button_create_entries.grid(row=3, column=2, columnspan=2)
 
 button_calculate = tk.Button(window, text="Calcular y mostrar resultados", command=calculate_and_display_results)
-button_calculate.grid(row=2, column=2, columnspan=2)
+button_calculate.grid(row=3, column=4, columnspan=2)
 
 frame_plot = tk.Frame(window)
-frame_plot.grid(row=3, column=2, columnspan=2, rowspan=10)
+frame_plot.grid(row=4, column=2, columnspan=2, rowspan=10)
 
 frame_calculated_plot = tk.Frame(window)
-frame_calculated_plot.grid(row=3, column=4, columnspan=2, rowspan=10)
+frame_calculated_plot.grid(row=4, column=4, columnspan=2, rowspan=10)
 
 label_A = tk.Label(window, text="")
-label_A.grid(row=13, column=2, columnspan=2)
+label_A.grid(row=14, column=0, columnspan=2)
 label_EA = tk.Label(window, text="")
-label_EA.grid(row=14, column=2, columnspan=2)
+label_EA.grid(row=15, column=0, columnspan=2)
 label_EA_percent = tk.Label(window, text="")
-label_EA_percent.grid(row=15, column=2, columnspan=2)
+label_EA_percent.grid(row=16, column=0, columnspan=2)
 label_B = tk.Label(window, text="")
-label_B.grid(row=16, column=2, columnspan=2)
+label_B.grid(row=17, column=0, columnspan=2)
 label_EB = tk.Label(window, text="")
-label_EB.grid(row=17, column=2, columnspan=2)
+label_EB.grid(row=18, column=0, columnspan=2)
 label_EB_percent = tk.Label(window, text="")
-label_EB_percent.grid(row=18, column=2, columnspan=2)
+label_EB_percent.grid(row=19, column=0, columnspan=2)
 label_sigma_squared = tk.Label(window, text="")
-label_sigma_squared.grid(row=19, column=2, columnspan=2)
+label_sigma_squared.grid(row=20, column=0, columnspan=2)
 label_r_squared = tk.Label(window, text="")
-label_r_squared.grid(row=20, column=2, columnspan=2)
+label_r_squared.grid(row=21, column=0, columnspan=2)
 label_delta = tk.Label(window, text="")
-label_delta.grid(row=21, column=2, columnspan=2)
+label_delta.grid(row=22, column=0, columnspan=2)
 label_S = tk.Label(window, text="")
-label_S.grid(row=22, column=2, columnspan=2)
+label_S.grid(row=23, column=0, columnspan=2)
 
+# Iniciar el loop principal
 window.mainloop()

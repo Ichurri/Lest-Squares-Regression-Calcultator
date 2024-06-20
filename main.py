@@ -64,7 +64,7 @@ def calculate_delta(xs, n):
 
 
 def calculate_EA(sum_x2, sigma_squared, delta):
-    EA = math.sqrt((sum_x2 - sigma_squared) / delta)
+    EA = math.sqrt((sum_x2 * sigma_squared) / delta)
     return EA
 
 
