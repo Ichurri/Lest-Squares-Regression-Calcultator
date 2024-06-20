@@ -43,6 +43,18 @@ def calculate_B(xs, ys, n):
     return B
 
 
+def calculate_d(xs, ys, A, B):
+    # Calcular la serie de datos d
+    d = [y - (A + (B * x)) for x, y in zip(xs, ys)]
+    return d
+
+
+def calculate_d_squared(d):
+    # Calcular la serie de datos d^2
+    d_squared = [di ** 2 for di in d]
+    return d_squared
+
+
 if __name__ == "__main__":
     # Solicitar al usuario la cantidad de pares de datos
     n = int(input("Introduce el número de pares de datos: "))
@@ -63,3 +75,15 @@ if __name__ == "__main__":
     B = calculate_B(xs, ys, n)
     print(f"El valor de A es: {A}")
     print(f"El valor de B es: {B}")
+
+    # Calcular la serie de datos d
+    d = calculate_d(xs, ys, A, B)
+    print("La serie de datos d es:")
+    for i, di in enumerate(d, start=1):
+        print(f"d{i} = {di}")
+
+    # Calcular la serie de datos d^2
+    d_squared = calculate_d_squared(d)
+    print("La serie de datos d^2 es:")
+    for i, d2 in enumerate(d_squared, start=1):
+        print(f"d{i}^2 = {d2}")
