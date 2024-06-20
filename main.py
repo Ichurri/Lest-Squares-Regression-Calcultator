@@ -55,6 +55,20 @@ def calculate_d_squared(d):
     return d_squared
 
 
+def calculate_sigma_squared(d_squared, n):
+    # Calcular sigma^2
+    sigma_squared = sum(d_squared) / (n - 2)
+    return sigma_squared
+
+
+def calculate_delta(xs, n):
+    # Calcular delta
+    sum_x = sum(xs)
+    sum_x2 = sum(x ** 2 for x in xs)
+    delta = (n * sum_x2) - (sum_x ** 2)
+    return delta
+
+
 if __name__ == "__main__":
     # Solicitar al usuario la cantidad de pares de datos
     n = int(input("Introduce el número de pares de datos: "))
@@ -78,12 +92,18 @@ if __name__ == "__main__":
 
     # Calcular la serie de datos d
     d = calculate_d(xs, ys, A, B)
-    print("La serie de datos d es:")
-    for i, di in enumerate(d, start=1):
-        print(f"d{i} = {di}")
 
     # Calcular la serie de datos d^2
     d_squared = calculate_d_squared(d)
-    print("La serie de datos d^2 es:")
-    for i, d2 in enumerate(d_squared, start=1):
-        print(f"d{i}^2 = {d2}")
+
+    # Calcular S
+    S = sum(d_squared)
+    print(f"El valor de S es: {S}")
+
+    # Calcular sigma^2
+    sigma_squared = calculate_sigma_squared(d_squared, n)
+    print(f"El valor de σ^2 es: {sigma_squared}")
+
+    # Calcular delta
+    delta = calculate_delta(xs, n)
+    print(f"El valor de Δ es: {delta}")
