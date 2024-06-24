@@ -113,6 +113,22 @@ def calculate_r(xs, ys, n):
     result = numerator / denominator
     return result
 
+def calculate_D_percent(B, b_real):
+    D_percent = abs((B - b_real) / b_real) * 100
+    return D_percent
+
+def calculate_a(A):
+    a = math.exp(A)
+    return a
+
+def calculate_Ea(a, EA):
+    Ea = a * EA
+    return Ea
+
+def calculta_Ea_percent(a, Ea):
+    Ea_percent = abs((Ea / a) * 100)
+    return Ea
+
 def calculate_and_display_results():
     try:
         n = int(entry_n.get())
@@ -150,9 +166,15 @@ def calculate_and_display_results():
         sum_x2 = sum(x ** 2 for x in xs)
         EA = calculate_EA(sum_x2, sigma_squared, delta)
         EA_percent = calculate_EA_percent(EA, A)
+        a = calculate_a(A)
+        Ea = calculate_Ea(a, EA)
+        Ea_percent = calculate_Ea(a, Ea)
         EB = calculate_EB(sigma_squared, n, delta)
         EB_percent = calculate_EB_percent(EB, B)
         r = calculate_r(xs, ys, n)
+
+        b_real = float(entry_b_real.get())
+        D_percent = calculate_D_percent(B, b_real)
 
         label_A.config(text=f"El valor de A es: {A:.4f}")
         label_EA.config(text=f"El valor de EA es: {EA:.4f}")
@@ -164,6 +186,16 @@ def calculate_and_display_results():
         label_r_squared.config(text=f"El valor de r² es: {r**2:.4f}")
         label_delta.config(text=f"El valor de Δ es: {delta:.4f}")
         label_S.config(text=f"El valor de S es: {S:.4f}")
+        label_D_percent.config(text=f"El valor de D% es: {D_percent:.4f}%")
+
+        if is_exponential:
+            label_a.config(text=f"El valor de a es: {a:.4f}")
+            label_Ea.config(text=f"El valor de Ea es: {Ea:.4f}")
+            label_Ea_percent.config(text=f"El valor de Ea% es: {Ea_percent:.4f}%")
+        else:
+            label_a.config(text="")
+            label_Ea.config(text="")
+            label_Ea_percent.config(text="")
 
         plot_calculated(xs, ys, A, B, frame_calculated_plot, is_exponential)
 
@@ -203,11 +235,17 @@ radio_linear.grid(row=3, column=0)
 radio_exponential = tk.Radiobutton(window, text="Exponencial", variable=var_equation_type, value="Exponencial")
 radio_exponential.grid(row=3, column=1)
 
+label_b_real = tk.Label(window, text="Introduce el valor real de b:")
+label_b_real.grid(row=0, column=2, columnspan=2)
+
+entry_b_real = tk.Entry(window)
+entry_b_real.grid(row=1, column=2, columnspan=2)
+
 button_create_entries = tk.Button(window, text="Crear entradas", command=create_entries)
-button_create_entries.grid(row=3, column=2, columnspan=2)
+button_create_entries.grid(row=3, column=4, columnspan=2)
 
 button_calculate = tk.Button(window, text="Calcular y mostrar resultados", command=calculate_and_display_results)
-button_calculate.grid(row=3, column=4, columnspan=2)
+button_calculate.grid(row=3, column=6, columnspan=2)
 
 frame_plot = tk.Frame(window)
 frame_plot.grid(row=4, column=2, columnspan=2, rowspan=10)
@@ -235,6 +273,14 @@ label_delta = tk.Label(window, text="")
 label_delta.grid(row=22, column=0, columnspan=2)
 label_S = tk.Label(window, text="")
 label_S.grid(row=23, column=0, columnspan=2)
+label_D_percent = tk.Label(window, text="")
+label_D_percent.grid(row=24, column=0, columnspan=2)
+label_a = tk.Label(window, text="")
+label_a.grid(row=25, column=0, columnspan=2)
+label_Ea = tk.Label(window, text="")
+label_Ea.grid(row=26, column=0, columnspan=2)
+label_Ea_percent = tk.Label(window, text="")
+label_Ea_percent.grid(row=27, column=0, columnspan=2)
 
 # Iniciar el loop principal
 window.mainloop()
