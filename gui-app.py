@@ -5,7 +5,7 @@ from matplotlib.figure import Figure
 import math
 
 def plot_calculated(xs, ys, A, B, frame, is_exponential):
-    fig = Figure(figsize=(5, 4), dpi=100)
+    fig = Figure(figsize=(5, 5), dpi=100)
     plot = fig.add_subplot(111)
 
     plot.scatter(xs, ys, color='blue', label='Original Data')
@@ -16,7 +16,7 @@ def plot_calculated(xs, ys, A, B, frame, is_exponential):
 
     canvas = tkagg.FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
-    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    canvas.get_tk_widget().grid(row=0, column=0)
 
 def calculate_A(xs, ys, n):
     sum_x = sum(xs)
@@ -179,80 +179,92 @@ def create_entries():
     entries_x = []
     entries_y = []
 
-    label_x_column = tk.Label(window, text="x")
-    label_x_column.grid(row=4, column=0)
-    label_y_column = tk.Label(window, text="y")
-    label_y_column.grid(row=4, column=1)
+    label_x_column = tk.Label(frame_data, text="x")
+    label_x_column.grid(row=0, column=0)
+    label_y_column = tk.Label(frame_data, text="y")
+    label_y_column.grid(row=0, column=1)
 
     for i in range(int(entry_n.get())):
-        entry_x = tk.Entry(window)
-        entry_x.grid(row=i + 5, column=0)
+        entry_x = tk.Entry(frame_data)
+        entry_x.grid(row=i + 1, column=0, pady=2)
         entries_x.append(entry_x)
 
-        entry_y = tk.Entry(window)
-        entry_y.grid(row=i + 5, column=1)
+        entry_y = tk.Entry(frame_data)
+        entry_y.grid(row=i + 1, column=1, pady=2)
         entries_y.append(entry_y)
 
 window = tk.Tk()
 window.title("Cálculo de Regresión Lineal o Exponencial")
 
-label_n = tk.Label(window, text="Introduce el número de pares de datos:")
-label_n.grid(row=0, column=0, columnspan=2)
+frame_left = tk.Frame(window, padx=10, pady=10)
+frame_left.grid(row=0, column=0, sticky='nsew')
 
-entry_n = tk.Entry(window)
-entry_n.grid(row=1, column=0, columnspan=2)
+frame_plot = tk.Frame(window, padx=10, pady=10)
+frame_plot.grid(row=0, column=1, sticky='nsew')
 
-label_equation_type = tk.Label(window, text="Selecciona el tipo de ecuación:")
-label_equation_type.grid(row=2, column=0, columnspan=2)
+frame_input = tk.Frame(frame_left, padx=10, pady=10)
+frame_input.grid(row=0, column=0, sticky='ew')
+
+frame_data = tk.Frame(frame_left, padx=10, pady=10)
+frame_data.grid(row=1, column=0, sticky='ew')
+
+frame_results = tk.Frame(frame_left, padx=10, pady=10)
+frame_results.grid(row=2, column=0, sticky='ew')
+
+label_n = tk.Label(frame_input, text="Introduce el número de pares de datos:")
+label_n.grid(row=0, column=0, columnspan=2, pady=5)
+
+entry_n = tk.Entry(frame_input)
+entry_n.grid(row=1, column=0, columnspan=2, pady=5)
+
+label_equation_type = tk.Label(frame_input, text="Selecciona el tipo de ecuación:")
+label_equation_type.grid(row=2, column=0, columnspan=2, pady=5)
 
 var_equation_type = tk.StringVar(value="Lineal")
-radio_linear = tk.Radiobutton(window, text="Lineal", variable=var_equation_type, value="Lineal")
+radio_linear = tk.Radiobutton(frame_input, text="Lineal", variable=var_equation_type, value="Lineal")
 radio_linear.grid(row=3, column=0)
-radio_exponential = tk.Radiobutton(window, text="Exponencial", variable=var_equation_type, value="Exponential")
+radio_exponential = tk.Radiobutton(frame_input, text="Exponencial", variable=var_equation_type, value="Exponencial")
 radio_exponential.grid(row=3, column=1)
 
-label_b_real = tk.Label(window, text="Introduce el valor real de b:")
-label_b_real.grid(row=0, column=2, columnspan=2)
+label_b_real = tk.Label(frame_input, text="Introduce el valor real de b:")
+label_b_real.grid(row=0, column=2, columnspan=2, pady=5)
 
-entry_b_real = tk.Entry(window)
-entry_b_real.grid(row=1, column=2, columnspan=2)
+entry_b_real = tk.Entry(frame_input)
+entry_b_real.grid(row=1, column=2, columnspan=2, pady=5)
 
-button_create_entries = tk.Button(window, text="Crear entradas", command=create_entries)
-button_create_entries.grid(row=3, column=4, columnspan=2)
+button_create_entries = tk.Button(frame_input, text="Crear entradas", command=create_entries)
+button_create_entries.grid(row=3, column=2, columnspan=2, pady=5)
 
-button_calculate = tk.Button(window, text="Calcular y mostrar resultados", command=calculate_and_display_results)
-button_calculate.grid(row=3, column=6, columnspan=2)
+button_calculate = tk.Button(frame_input, text="Calcular y mostrar resultados", command=calculate_and_display_results)
+button_calculate.grid(row=3, column=4, columnspan=2, pady=5)
 
-frame_plot = tk.Frame(window)
-frame_plot.grid(row=4, column=2, columnspan=4, rowspan=10)
-
-label_A = tk.Label(window, text="")
-label_A.grid(row=14, column=0, columnspan=2)
-label_EA = tk.Label(window, text="")
-label_EA.grid(row=15, column=0, columnspan=2)
-label_EA_percent = tk.Label(window, text="")
-label_EA_percent.grid(row=16, column=0, columnspan=2)
-label_B = tk.Label(window, text="")
-label_B.grid(row=17, column=0, columnspan=2)
-label_EB = tk.Label(window, text="")
-label_EB.grid(row=18, column=0, columnspan=2)
-label_EB_percent = tk.Label(window, text="")
-label_EB_percent.grid(row=19, column=0, columnspan=2)
-label_sigma_squared = tk.Label(window, text="")
-label_sigma_squared.grid(row=20, column=0, columnspan=2)
-label_r_squared = tk.Label(window, text="")
-label_r_squared.grid(row=21, column=0, columnspan=2)
-label_delta = tk.Label(window, text="")
-label_delta.grid(row=22, column=0, columnspan=2)
-label_S = tk.Label(window, text="")
-label_S.grid(row=23, column=0, columnspan=2)
-label_D_percent = tk.Label(window, text="")
-label_D_percent.grid(row=24, column=0, columnspan=2)
-label_a = tk.Label(window, text="")
-label_a.grid(row=25, column=0, columnspan=2)
-label_Ea = tk.Label(window, text="")
-label_Ea.grid(row=26, column=0, columnspan=2)
-label_Ea_percent = tk.Label(window, text="")
-label_Ea_percent.grid(row=27, column=0, columnspan=2)
+label_A = tk.Label(frame_results, text="")
+label_A.grid(row=0, column=0, columnspan=2)
+label_EA = tk.Label(frame_results, text="")
+label_EA.grid(row=1, column=0, columnspan=2)
+label_EA_percent = tk.Label(frame_results, text="")
+label_EA_percent.grid(row=2, column=0, columnspan=2)
+label_B = tk.Label(frame_results, text="")
+label_B.grid(row=3, column=0, columnspan=2)
+label_EB = tk.Label(frame_results, text="")
+label_EB.grid(row=4, column=0, columnspan=2)
+label_EB_percent = tk.Label(frame_results, text="")
+label_EB_percent.grid(row=5, column=0, columnspan=2)
+label_sigma_squared = tk.Label(frame_results, text="")
+label_sigma_squared.grid(row=6, column=0, columnspan=2)
+label_r_squared = tk.Label(frame_results, text="")
+label_r_squared.grid(row=7, column=0, columnspan=2)
+label_delta = tk.Label(frame_results, text="")
+label_delta.grid(row=8, column=0, columnspan=2)
+label_S = tk.Label(frame_results, text="")
+label_S.grid(row=9, column=0, columnspan=2)
+label_D_percent = tk.Label(frame_results, text="")
+label_D_percent.grid(row=10, column=0, columnspan=2)
+label_a = tk.Label(frame_results, text="")
+label_a.grid(row=11, column=0, columnspan=2)
+label_Ea = tk.Label(frame_results, text="")
+label_Ea.grid(row=12, column=0, columnspan=2)
+label_Ea_percent = tk.Label(frame_results, text="")
+label_Ea_percent.grid(row=13, column=0, columnspan=2)
 
 window.mainloop()
