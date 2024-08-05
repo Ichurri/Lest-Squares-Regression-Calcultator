@@ -108,7 +108,7 @@ def calculate_D_percent(B, b_real):
 
 def calculate_and_display_results():
     try:
-        n = num_entries  # Usar la variable global num_entries en lugar de entry_n
+        n = num_entries 
         points = []
 
         for i in range(n):
@@ -149,22 +149,22 @@ def calculate_and_display_results():
         b_real = float(entry_b_real.get())
         D_percent = calculate_D_percent(B, b_real)
 
-        label_A.config(text=f"El valor de A es: {A:.4f}")
-        label_EA.config(text=f"El valor de EA es: {EA:.4f}")
-        label_EA_percent.config(text=f"El valor de EA% es: {EA_percent:.4f}%")
-        label_B.config(text=f"El valor de B es: {B:.4f}")
-        label_EB.config(text=f"El valor de EB es: {EB:.4f}")
-        label_EB_percent.config(text=f"El valor de EB% es: {EB_percent:.4f}%")
-        label_sigma_squared.config(text=f"El valor de σ² es: {sigma_squared:.4f}")
-        label_r_squared.config(text=f"El valor de r² es: {r ** 2:.4f}")
-        label_delta.config(text=f"El valor de Δ es: {delta:.4f}")
-        label_S.config(text=f"El valor de S es: {S:.4f}")
-        label_D_percent.config(text=f"El valor de D% es: {D_percent:.4f}%")
+        label_A.config(text=f"The value of A is: {A:.4f}")
+        label_EA.config(text=f"The value of EA is: {EA:.4f}")
+        label_EA_percent.config(text=f"The value of EA% is: {EA_percent:.4f}%")
+        label_B.config(text=f"The value of B is: {B:.4f}")
+        label_EB.config(text=f"The value of EB is: {EB:.4f}")
+        label_EB_percent.config(text=f"The value of EB% is: {EB_percent:.4f}%")
+        label_sigma_squared.config(text=f"The value of σ² is: {sigma_squared:.4f}")
+        label_r_squared.config(text=f"The value of r² is: {r ** 2:.4f}")
+        label_delta.config(text=f"The value of Δ is: {delta:.4f}")
+        label_S.config(text=f"The value of S is: {S:.4f}")
+        label_D_percent.config(text=f"The value of D% is: {D_percent:.4f}%")
 
         if is_exponential:
-            label_a.config(text=f"El valor de a es: {a:.4f}")
-            label_Ea.config(text=f"El valor de Ea es: {Ea:.4f}")
-            label_Ea_percent.config(text=f"El valor de Ea% es: {Ea_percent:.4f}%")
+            label_a.config(text=f"The value of A is: {a:.4f}")
+            label_Ea.config(text=f"The value of EA is: {Ea:.4f}")
+            label_Ea_percent.config(text=f"The value of EA% is: {Ea_percent:.4f}%")
         else:
             label_a.config(text="")
             label_Ea.config(text="")
@@ -173,7 +173,7 @@ def calculate_and_display_results():
         plot_calculated(xs, ys, A, B, frame_plot, is_exponential)
 
     except ValueError as e:
-        messagebox.showerror("Error", f"Error en la entrada de datos: {e}")
+        messagebox.showerror("Error", f"Error in the data entry: {e}")
 
 def create_entries():
     global entries_x, entries_y, num_entries
@@ -205,7 +205,7 @@ def create_entries():
         entries_y.append(entry_y)
 
 window = tk.Tk()
-window.title("Cálculo de Regresión Lineal o Exponencial")
+window.title("Calculation of Linear or Exponential Regression")
 
 style = ttk.Style()
 style.theme_use('clam')
@@ -213,13 +213,13 @@ style.theme_use('clam')
 frame_inputs = tk.Frame(window)
 frame_inputs.grid(row=0, column=0, padx=5, pady=5)
 
-label_n = tk.Label(frame_inputs, text="Introduce el número de pares de datos:")
+label_n = tk.Label(frame_inputs, text="Enter the number of data pairs:")
 label_n.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
 
 entry_n = tk.Entry(frame_inputs)
 entry_n.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
-label_equation_type = tk.Label(frame_inputs, text="Selecciona el tipo de ecuación:")
+label_equation_type = tk.Label(frame_inputs, text="Select the type of equation:")
 label_equation_type.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
 
 var_equation_type = tk.StringVar(value="Lineal")
@@ -228,16 +228,16 @@ radio_linear.grid(row=3, column=0, padx=5, pady=5)
 radio_exponential = ttk.Radiobutton(frame_inputs, text="Exponencial", variable=var_equation_type, value="Exponential")
 radio_exponential.grid(row=3, column=1, padx=5, pady=5)
 
-label_b_real = tk.Label(frame_inputs, text="Introduce el valor real de b:")
+label_b_real = tk.Label(frame_inputs, text="Enter the real value of b:")
 label_b_real.grid(row=0, column=2, columnspan=2, padx=5, pady=5)
 
 entry_b_real = tk.Entry(frame_inputs)
 entry_b_real.grid(row=1, column=2, columnspan=2, padx=5, pady=5)
 
-button_create_entries = ttk.Button(frame_inputs, text="Crear entradas", command=create_entries)
+button_create_entries = ttk.Button(frame_inputs, text="Create entries", command=create_entries)
 button_create_entries.grid(row=3, column=4, columnspan=2, padx=5, pady=5)
 
-button_calculate = ttk.Button(frame_inputs, text="Calcular y mostrar resultados", command=calculate_and_display_results)
+button_calculate = ttk.Button(frame_inputs, text="Calculate and display results", command=calculate_and_display_results)
 button_calculate.grid(row=3, column=6, columnspan=2, padx=5, pady=5)
 
 frame_results = tk.Frame(window)
