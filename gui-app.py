@@ -108,7 +108,7 @@ def calculate_D_percent(B, b_real):
 
 def calculate_and_display_results():
     try:
-        n = int(entry_n.get())
+        n = num_entries  # Usar la variable global num_entries en lugar de entry_n
         points = []
 
         for i in range(n):
@@ -176,16 +176,26 @@ def calculate_and_display_results():
         messagebox.showerror("Error", f"Error en la entrada de datos: {e}")
 
 def create_entries():
-    global entries_x, entries_y
+    global entries_x, entries_y, num_entries
     entries_x = []
     entries_y = []
+
+    # Obtener el valor de entry_n antes de destruirlo
+    num_entries = int(entry_n.get())
+
+    # Destruir los widgets antiguos
+    label_n.destroy()
+    entry_n.destroy()
+    label_equation_type.destroy()
+    radio_linear.destroy()
+    radio_exponential.destroy()
 
     label_x_column = tk.Label(frame_inputs, text="x")
     label_x_column.grid(row=0, column=0, padx=5, pady=2)
     label_y_column = tk.Label(frame_inputs, text="y")
     label_y_column.grid(row=0, column=1, padx=5, pady=2)
 
-    for i in range(int(entry_n.get())):
+    for i in range(num_entries):
         entry_x = tk.Entry(frame_inputs)
         entry_x.grid(row=i + 1, column=0, padx=5, pady=2)
         entries_x.append(entry_x)
